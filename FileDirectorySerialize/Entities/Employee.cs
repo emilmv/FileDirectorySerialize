@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace FileDirectorySerialize.Entities
 {
-    internal class Employee
+    public class Employee
     {
         public int Id { get; set; } 
         public string? Name { get; set; }
         public double Salary { get; set; }
 
-        void ShowInfo()
+      public void ShowInfo()
         {
             Console.WriteLine($"ID: {Id} | NAME: {Name} | SALARY: {Salary} ");
         }

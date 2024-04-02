@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace FileDirectorySerialize.Entities
 {
-    internal class Department
+    public class Department
     {
         public int Id { get; set; }
         public string? Name { get; set; }
@@ -17,13 +17,24 @@ namespace FileDirectorySerialize.Entities
         {
 
         }
-        void GetEmployeeById(int id)
+        public Employee GetEmployeeById(int id)
         {
-
+            Employee foundEmployee = Employees.Find(e=>e.Id==id);
+            if (foundEmployee == null)
+            {
+                Console.WriteLine("EMPLOYEE NOT FOUND");
+            }
+            return foundEmployee;
+            
         }
-        void RemoveEmployee(int id)
+       public void RemoveEmployee(int id)
         {
-
+            Employee foundEmployee=Employees.Find(e=>e.Id==id);
+            if (foundEmployee == null)
+            {
+                Console.WriteLine("EMPLOYEE NOT FOUND");
+            }
+            else Employees.Remove(foundEmployee);
         }
     }
 }

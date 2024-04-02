@@ -10,23 +10,40 @@ namespace FileDirectorySerialize
     {
         static void Main(string[] args)
         {
-            string path = "C:\\Users\\user\\Desktop\\FileDirectorySerialize\\Files\\Database.json";
+
+            string path = "C:\\Users\\user\\Desktop\\FileDirectorySerialize\\FileDirectorySerialize\\Files";
+            Directory.SetCurrentDirectory(path);
             DirectoryInfo directoryInfo = new(path);
             if (!directoryInfo.Exists) directoryInfo.Create();
             Department Finance = new();
             Finance.Name = "FINANCE DEPARTMENT";
+            Finance.Employees = new();
             Department HR = new();
             HR.Name = "HR DEPARTMENT";
+            HR.Employees = new();
             Department BusinessDevelopment = new();
             BusinessDevelopment.Name = "BUSINESS DEVELOPMENT DEPARTMENT";
+            BusinessDevelopment.Employees = new();
             Department Administrative = new();
             Administrative.Name = "ADMINISTRATIVE DEPARTMENT";
+            Administrative.Employees = new();
             Department Procurement = new();
             Procurement.Name = "PROCUREMENT DEPARTMENT";
+            Procurement.Employees = new();
             Department QA = new();
             QA.Name = "QUALITY ASSURANCE DEPARTMENT";
+            QA.Employees = new();
             Department Legal = new();
             Legal.Name = "LEGAL DEPARTMENT";
+            Legal.Employees = new();
+            List<Department> Departments = new();
+            Departments.Add(Finance);
+            Departments.Add(HR);
+            Departments.Add(BusinessDevelopment);
+            Departments.Add(Administrative);
+            Departments.Add(Procurement);
+            Departments.Add(QA);
+            Departments.Add(Legal);
 
 
 
@@ -127,7 +144,7 @@ namespace FileDirectorySerialize
                         {
                             case 1:
                                 Finance.Employees.Add(employee);
-                                SerializeJson(Finance.Employees, path);
+                                SerializeJson(Finance);
                                 Console.ForegroundColor = ConsoleColor.Red;
                                 Console.BackgroundColor = ConsoleColor.DarkBlue;
                                 Console.WriteLine("EMPLOYEE ADDED SUCCESSFULLY!");
@@ -138,7 +155,7 @@ namespace FileDirectorySerialize
                                 break;
                             case 2:
                                 HR.Employees.Add(employee);
-                                SerializeJson(HR.Employees, path);
+                                SerializeJson(HR);
                                 Console.ForegroundColor = ConsoleColor.Red;
                                 Console.BackgroundColor = ConsoleColor.DarkBlue;
                                 Console.WriteLine("EMPLOYEE ADDED SUCCESSFULLY!");
@@ -149,7 +166,7 @@ namespace FileDirectorySerialize
                                 break;
                             case 3:
                                 BusinessDevelopment.Employees.Add(employee);
-                                SerializeJson(BusinessDevelopment.Employees, path);
+                                SerializeJson(BusinessDevelopment);
                                 Console.ForegroundColor = ConsoleColor.Red;
                                 Console.BackgroundColor = ConsoleColor.DarkBlue;
                                 Console.WriteLine("EMPLOYEE ADDED SUCCESSFULLY!");
@@ -160,7 +177,7 @@ namespace FileDirectorySerialize
                                 break;
                             case 4:
                                 Administrative.Employees.Add(employee);
-                                SerializeJson(Administrative.Employees, path);
+                                SerializeJson(Administrative);
                                 Console.ForegroundColor = ConsoleColor.Red;
                                 Console.BackgroundColor = ConsoleColor.DarkBlue;
                                 Console.WriteLine("EMPLOYEE ADDED SUCCESSFULLY!");
@@ -171,7 +188,7 @@ namespace FileDirectorySerialize
                                 break;
                             case 5:
                                 Procurement.Employees.Add(employee);
-                                SerializeJson(Procurement.Employees, path);
+                                SerializeJson(Procurement);
                                 Console.ForegroundColor = ConsoleColor.Red;
                                 Console.BackgroundColor = ConsoleColor.DarkBlue;
                                 Console.WriteLine("EMPLOYEE ADDED SUCCESSFULLY!");
@@ -182,7 +199,7 @@ namespace FileDirectorySerialize
                                 break;
                             case 6:
                                 QA.Employees.Add(employee);
-                                SerializeJson(QA.Employees, path);
+                                SerializeJson(QA);
                                 Console.ForegroundColor = ConsoleColor.Red;
                                 Console.BackgroundColor = ConsoleColor.DarkBlue;
                                 Console.WriteLine("EMPLOYEE ADDED SUCCESSFULLY!");
@@ -193,7 +210,7 @@ namespace FileDirectorySerialize
                                 break;
                             case 7:
                                 Legal.Employees.Add(employee);
-                                SerializeJson(Legal.Employees, path);
+                                SerializeJson(Legal);
                                 Console.ForegroundColor = ConsoleColor.Red;
                                 Console.BackgroundColor = ConsoleColor.DarkBlue;
                                 Console.WriteLine("EMPLOYEE ADDED SUCCESSFULLY!");
@@ -233,17 +250,15 @@ namespace FileDirectorySerialize
                             Console.ResetColor();
                             goto userIdInput;
                         }
-                        foreach (var item in DeserializeJson(path))
+                        foreach (var item in DeserializeJson().Employees)
                         {
-                            foreach (var item2 in item.Employees)
+                            if (item.Id == inputId)
                             {
-                                if (item2.Id == inputId)
-                                {
-                                    Console.WriteLine($"FOUND EMPLOYEES ON {item.Name}");
-                                    item2.ShowInfo();
-                                }
-                                else Console.WriteLine("EMPLOYEE NOT FOUND");
+                                Console.WriteLine($"FOUND EMPLOYEES ON {DeserializeJson().Name}");
+                                item.ShowInfo();
                             }
+                            else Console.WriteLine("EMPLOYEE NOT FOUND");
+
                         }
 
                         break;
@@ -268,16 +283,16 @@ namespace FileDirectorySerialize
                             Console.ResetColor();
                             goto userIdInput2;
                         }
-                        foreach (var item in DeserializeJson(path))
+                        foreach (var item in DeserializeJson().Employees)
                         {
-                            foreach(var item2 in item.Employees)
+                            if (item.Id == inputId2)
                             {
-                                if (item2.Id == inputId2)
+                                DeserializeJson().RemoveEmployee(inputId2);
+                                foreach(var dep in Departments)
                                 {
-                                    item.RemoveEmployee(inputId2);
-                                    SerializeJson(item.Employees, path);
-                                    Console.WriteLine($"EMPLOYEE - {item2.Name} HAS BEEN REMOVED FROM {item}");
+                                    SerializeJson(dep);
                                 }
+                                Console.WriteLine($"EMPLOYEE - {item.Name} HAS BEEN REMOVED FROM {DeserializeJson().Name}");
                             }
                         }
                         break;
@@ -285,19 +300,21 @@ namespace FileDirectorySerialize
                 }
             }
         }
-       static void SerializeJson<T>(List<T> list, string path)
+        static void SerializeJson(Department department)
         {
-            using FileStream fs = new(path, FileMode.Create);
-            string data = JsonConvert.SerializeObject(list);
+            using FileStream fs = new("C:\\Users\\user\\Desktop\\FileDirectorySerialize\\FileDirectorySerialize\\Files\\Database.json", FileMode.Create);
+            string data = JsonConvert.SerializeObject(department);
             using StreamWriter sr = new StreamWriter(fs);
             sr.Write(data);
         }
-       static List<Department> DeserializeJson(string path)
+        static Department DeserializeJson()
         {
-            using FileStream fs = new(path, FileMode.Open);
+            using FileStream fs = new("C:\\Users\\user\\Desktop\\FileDirectorySerialize\\FileDirectorySerialize\\Files\\Database.json", FileMode.Open);
             using StreamReader sr = new(fs);
             string data = sr.ReadToEnd();
-            return JsonConvert.DeserializeObject <List<Department>> (data);
+            return JsonConvert.DeserializeObject<Department>(data);
+
+
         }
     }
 }

@@ -14,10 +14,6 @@ namespace FileDirectorySerialize.Entities
         public string? Name { get; set; }
         public List<Employee> Employees { get; set; }
 
-        void AddEmployee(Employee employee)
-        {
-
-        }
         public Employee GetEmployeeById(int id)
         {
             Employee foundEmployee = Employees.Find(e=>e.Id==id);
@@ -26,7 +22,6 @@ namespace FileDirectorySerialize.Entities
                 Console.WriteLine("EMPLOYEE NOT FOUND");
             }
             return foundEmployee;
-            
         }
        public void RemoveEmployee(int id)
         {

@@ -1,8 +1,5 @@
 ﻿using FileDirectorySerialize.Entities;
 using Newtonsoft.Json;
-using System.Collections.Immutable;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace FileDirectorySerialize
 {
@@ -15,6 +12,8 @@ namespace FileDirectorySerialize
             Directory.SetCurrentDirectory(path);
             DirectoryInfo directoryInfo = new(path);
             if (!directoryInfo.Exists) directoryInfo.Create();
+
+            #region Instances
             Department Finance = new();
             Finance.Name = "FINANCE DEPARTMENT";
             Finance.Employees = new();
@@ -44,8 +43,7 @@ namespace FileDirectorySerialize
             Departments.Add(Procurement);
             Departments.Add(QA);
             Departments.Add(Legal);
-
-
+            #endregion
 
             while (true)
             {
@@ -228,7 +226,6 @@ namespace FileDirectorySerialize
                                 goto departmentInput;
                         }
                         break;
-
                     case 2:
                         Console.Clear();
                     userIdInput:
@@ -258,9 +255,7 @@ namespace FileDirectorySerialize
                                 item.ShowInfo();
                             }
                             else Console.WriteLine("EMPLOYEE NOT FOUND");
-
                         }
-
                         break;
                     case 3:
                         Console.Clear();
@@ -313,8 +308,6 @@ namespace FileDirectorySerialize
             using StreamReader sr = new(fs);
             string data = sr.ReadToEnd();
             return JsonConvert.DeserializeObject<Department>(data);
-
-
         }
     }
 }
